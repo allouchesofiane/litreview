@@ -2,7 +2,20 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.conf import settings
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
+
+class User(AbstractUser):
+    """
+    Modèle utilisateur personnalisé.
+    """
+    
+    class Meta:
+        verbose_name = "Utilisateur"
+        verbose_name_plural = "Utilisateurs"
+    
+    def __str__(self):
+        return self.username
 
 class Ticket(models.Model):
 
@@ -55,3 +68,38 @@ class UserFollows(models.Model):
         unique_together = ('user', 'followed_user')
         verbose_name = "Abonnement"
         verbose_name_plural = "Abonnements"
+
+    
+
+    
+# class Book(models.Model):
+#     ADVENTURE = "AV"
+#     THRILLER = "TR"
+#     FANTASY = "FS"
+#     ROMANCE = "RM"
+#     HORROR = "HR"
+#     SCIENCE_FICTION = "SF"
+#     GENRES = [
+#         (ADVENTURE, "Aventure"),
+#         (THRILLER, "Thriller"),
+#         (FANTASY, "Fantastique"),
+#         (ROMANCE, "Romance"),
+#         (HORROR, "Horreur"),
+#         (SCIENCE_FICTION, "Science-fiction"),]
+#     title = models.CharField(max_length=100)
+#     price = models.FloatField(max_digits=10)
+#     summary = models.TextField(max_length=200)
+#     author = models.ForeignKey(User, on_delete=models.CASCADE)
+#     category = models.CharField(max_length=25, choices="GENRES")
+#     stock = models.IntegerField(default=0)
+
+#     def __str__(self):
+#         return self.title
+
+# class Author(models.Model):
+#     firstname=models.CharField(max_length=100)
+#     lastname=models.CharField(max_length=100)
+#     wikipedia=models.CharField(max_length=100)
+
+#     def __str__(self):
+#         return "f mon nom est {self.firstname} et mon prenom est {self.lastname}"

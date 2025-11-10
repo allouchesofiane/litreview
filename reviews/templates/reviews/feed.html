@@ -1,0 +1,35 @@
+{% extends 'reviews/base.html' %}
+{% block title %}Flux - LITReview{% endblock %}
+{% block content %}
+<div class="container position-relative">
+  <!-- Bouton Déconnexion  -->
+  <div class="position-absolute top-0 end-0 pt-3">
+    {% if user.is_authenticated %}
+      <form method="post" action="{% url 'home' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-secondary btn-sm">Déconnexion</button>
+      </form>
+    {% endif %}
+  </div>
+
+  <h1 style="text-align: center; margin-bottom: 32px;">
+       Votre Flux
+  </h1>
+  
+  <!-- Boutons d'actions -->
+  <div class="page-actions d-flex gap-2 justify-content-center mb-4">
+      <a href="" class="btn btn-primary">Demander une critique</a>
+      <a href="" class="btn btn-secondary">Créer une critique</a>
+  </div>
+  
+ 
+      <div class="empty-state text-center py-5">
+          <h2>Votre flux est vide</h2>
+          <p>Commencez par suivre des utilisateurs ou créez votre premier ticket !</p>
+          <div style="margin-top: 24px;">
+              <a href="" class="btn btn-primary">Suivre des utilisateurs</a>
+          </div>
+      </div>
+
+</div>
+{% endblock %}

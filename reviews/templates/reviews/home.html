@@ -1,0 +1,54 @@
+{% extends 'reviews/base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- Titre -->
+    <div class="text-center mb-5">
+        <h1 class="fw-bold">Bienvenue sur <span class="text-primary">LITReview</span></h1>
+        <p class="text-muted fs-5">Partagez vos critiques littéraires et découvrez les avis de la communauté </p>
+    </div>
+
+    <div class="row justify-content-center">
+
+        <!-- Inscription -->
+        <div class="col-md-5 mb-4">
+            <div class="card border-0 h-100">
+                <div class="card-body text-center">
+                    <p>Créez un compte</p>
+                    <a href="{% url 'signup' %}" class="btn btn-primary w-100">Inscrivez-vous maintenant</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Connexion -->
+        <div class="col-md-5 mb-4">
+            <div class="card border-0 h-100">
+                <div class="card-body">
+                    <h2 class="h4 text-center mb-3">Connectez-vous</h2>
+                    <form method="post" action="{% url 'home' %}">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label class="form-label mb-0">{{ form.username.label }}</label>
+                            {{ form.username|add_class:"form-control" }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label mb-0">{{ form.password.label }}</label>
+                            {{ form.password|add_class:"form-control" }}
+                        </div>
+
+                        <button class="btn btn-outline-primary w-100" type="submit">Se connecter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
