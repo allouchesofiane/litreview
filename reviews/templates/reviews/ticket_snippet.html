@@ -1,0 +1,37 @@
+<div class="card">
+    <div class="card-header">
+        <div>
+            <span class="card-badge">Ticket</span>
+            <h3 class="card-title">{{ ticket.title }}</h3>
+            <div class="card-meta">
+                <span>
+                    Par {{ ticket.user.username }}<br>
+                    {{ ticket.time_created|date:"d M Y à H:i" }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    {% if ticket.description %}
+    <div class="card-body">
+        <p>{{ ticket.description }}</p>
+    </div>
+    {% endif %}
+
+    {% if ticket.image %}
+    <div>
+        <img src="{{ ticket.image.url }}" alt="Image du ticket {{ ticket.title }}" class="card-image">
+    </div>
+    {% endif %}
+
+    <div class="card-actions ">
+        {% if ticket.user == user %}
+            <a href="{% url 'edit_ticket' ticket.id %}" class="btn btn-secondary">Modifier</a>
+            <a href="{% url 'delete_ticket' ticket.id %}" class="btn btn-danger">Supprimer</a>
+        {% else %}
+            {% if not ticket.already_reviewed %}
+            <a href="{% url 'create_review' ticket.id %}" class="btn btn-primary">Créer une critique</a>
+            {% endif %}
+            {% endif %}
+    </div>
+</div>

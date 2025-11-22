@@ -1,0 +1,43 @@
+
+<div class="card review-card">
+    <div class="card-header">
+        <div>
+            <span class="card-badge"> Critique</span>
+            <div class="review-header">
+                <div>
+                    <h3 class="card-title">{{ review.headline }}</h3>
+                    <div class="card-meta">
+                        <span>Par {{ review.user.username }}</span>
+                    </div>
+                </div>
+                <div class="review-rating" aria-label="Note: {{ review.rating }} étoiles sur 5">
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= review.rating %}
+                            ★
+                        {% else %}
+                            ☆
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% if review.body %}
+    <div class="card-body">
+        <p>{{ review.body }}</p>
+    </div>
+    {% endif %}
+    
+    <div class="ticket-snippet">
+            <p>En réponse au ticket :</p>
+        
+        <strong>{{ review.ticket.title }}</strong>
+        <p style="margin-top: 4px; font-size: 0.9rem;">
+            Par {{ review.ticket.user.username }}
+        </p>
+        {% if review.ticket.image %}
+        <img src="{{ review.ticket.image.url }}" alt="Image du livre" style="max-width: 100px; margin-top: 8px; border-radius: 4px;">
+        {% endif %}
+    </div>
+</div> 

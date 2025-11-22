@@ -12,7 +12,6 @@ class User(AbstractUser):
     
     class Meta:
         verbose_name = "Utilisateur"
-        verbose_name_plural = "Utilisateurs"
     
     def __str__(self):
         return self.username
@@ -30,10 +29,13 @@ class Ticket(models.Model):
     image = models.ImageField(null=True, blank=True, verbose_name="Image")
     time_created = models.DateTimeField(auto_now_add=True, verbose_name="Date de création")
 
+    def user_has_reviewed(self, user):
+        """Vérifie si l'utilisateur a déjà créé une critique pour ce ticket"""
+        return self.review_set.filter(user=user).exists()
+
     class Meta:
         ordering = ['-time_created']
         verbose_name = "Ticket"
-        verbose_name_plural = "Tickets"
 
 class Review(models.Model):
     """
@@ -44,30 +46,36 @@ class Review(models.Model):
     headline = models.CharField(max_length=128, verbose_name="Titre de la critique")
     body = models.CharField(max_length=8192, blank=True, verbose_name="Commentaire")
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Auteur")
-    time_created = models.DateTimeField(auto_now_add=True, verbose_name="Datede la création")
+    time_created = models.DateTimeField(auto_now_add=True, verbose_name="Date de la création")
 
     class Meta:
         ordering = ['-time_created']
         verbose_name = "Critique"
-        verbose_name_plural = "Critiques"
-
 
 class UserFollows(models.Model):
-
     """
     Modèle représentant la relation de suivi entre utilisateurs.
-    Un utilisateur (user) suit un autre utilisateur (followed_user).
     """
-    # Your UserFollows model definition goes here
-    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='following', verbose_name="Utilisateur")
-    followed_user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='followed_by', verbose_name="Utilisateur suivi")
-
+    user = models.ForeignKey(
+        to=settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='following',
+        verbose_name="Utilisateur"
+    )
+    followed_user = models.ForeignKey(
+        to=settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='followed_by',
+        verbose_name="Utilisateur suivi"
+    )
 
     class Meta:
         # Empêche qu'un utilisateur suive la même personne plusieurs fois
         unique_together = ('user', 'followed_user')
         verbose_name = "Abonnement"
-        verbose_name_plural = "Abonnements"
+
+    def __str__(self):
+        return f"{self.user.username} suit {self.followed_user.username}"
 
     
 

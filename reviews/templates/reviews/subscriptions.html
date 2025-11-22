@@ -1,0 +1,70 @@
+{% extends 'reviews/base.html' %}
+
+{% block title %}Abonnements - LITReview{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 style="text-align: center; margin-bottom: 32px;">
+         Abonnements
+    </h1>
+    
+    <!-- Formulaire pour suivre un utilisateur -->
+    <div class="card" style="padding: 24px; margin-bottom: 32px; max-width: 600px; margin-left: auto; margin-right: auto;">
+        <h2 style="margin-bottom: 16px;">Suivre un nouvel utilisateur</h2>
+        <form method="post" style="display: flex; gap: 16px;">
+            {% csrf_token %}
+            <div style="flex: 1;">
+                {{ form.username }}
+            </div>
+            <button type="submit" class="btn btn-primary">Envoyer</button>
+        </form>
+    </div>
+    
+    <!-- Grille : Abonnements & Abonnés -->
+    <div class="subscriptions-grid">
+        <!-- Section Abonnements (utilisateurs suivis) -->
+        <div class="subscription-section">
+            <h3> Abonnements ({{ following.count }})</h3>
+            
+            {% if following %}
+                <ul class="subscription-list">
+                    {% for follow in following %}
+                    <li class="subscription-item">
+                        <span><strong>{{ follow.followed_user.username }}</strong></span>
+                        <form method="post" action="{% url 'unfollow_user' follow.followed_user.id %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger" style="padding: 6px 12px; font-size: 0.875rem;">
+                                Désabonner
+                            </button>
+                        </form>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p style="padding: 16px 0;">
+                    Vous ne suivez personne pour le moment.
+                </p>
+            {% endif %}
+        </div>
+        
+        <!-- Section Abonnés (utilisateurs qui me suivent) -->
+        <div class="subscription-section">
+            <h3> Abonnés ({{ followers.count }})</h3>
+            
+            {% if followers %}
+                <ul class="subscription-list">
+                    {% for follower in followers %}
+                    <li class="subscription-item">
+                        <span><strong>{{ follower.user.username }}</strong></span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p style="padding: 16px 0;">
+                    Personne ne vous suit pour le moment.
+                </p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

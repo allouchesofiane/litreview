@@ -1,0 +1,27 @@
+{% extends 'reviews/base.html' %}
+
+{% block title %}Désabonnement - LITReview{% endblock %}
+
+{% block content %}
+<div class="container-narrow">
+    <div class="card" style="padding: 32px; text-align: center;">
+        <h1 style="margin-bottom: 16px;">
+             Confirmer le désabonnement
+        </h1>
+        <p style="margin-bottom: 24px; font-size: 1.1rem;">
+            Voulez-vous vraiment ne plus suivre {{ user_to_unfollow.username }} ?
+        </p>
+        <p style="margin-bottom: 32px; font-size: 0.9rem;">
+            Vous ne verrez plus ses posts dans votre flux.
+        </p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div style="display: flex; gap: 16px; justify-content: center;">
+                <button type="submit" class="btn btn-danger">Oui, désabonner</button>
+                <a href="{% url 'subscriptions' %}" class="btn btn-outline">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

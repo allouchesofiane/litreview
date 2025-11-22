@@ -1,0 +1,32 @@
+{% extends 'reviews/base.html' %}
+
+{% block title %}Supprimer le ticket - LITReview{% endblock %}
+
+{% block content %}
+
+<div class="container-narrow">
+    <div class="card" style="padding: 32px; text-align: center;">
+        <h1 style="margin-bottom: 16px;">
+             Supprimer ce ticket ?
+        </h1>
+        <p style="margin-bottom: 24px;">
+            Cette action est irréversible. Le ticket et toutes les critiques associées seront supprimés.
+        </p>
+        
+        <div class="card" style="padding: 16px; margin-bottom: 24px;">
+            <h3 style="margin-bottom: 8px;">{{ ticket.title }}</h3>
+            <p style="font-size: 0.9rem;">
+                Créé le {{ ticket.time_created|date:"d M Y à H:i" }}
+            </p>
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div style="display: flex; gap: 16px; justify-content: center;">
+                <button type="submit" class="btn btn-danger">supprimer</button>
+                <a href="{% url 'posts' %}" class="btn btn-outline">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
