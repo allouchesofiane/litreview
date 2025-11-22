@@ -19,7 +19,7 @@
             <p style="margin-top: 8px;">{{ ticket.description }}</p>
             {% endif %}
             {% if ticket.image %}
-            <img src="{{ ticket.image.url }}" alt="Image du livre" style="max-width: 150px; margin-top: 12px; border-radius: 4px;">
+            <img src="{{ ticket.image.url }}" alt="Image du livre" style="width: 200px; margin-top: 12px; border-radius: 4px;">
             {% endif %}
         </div>
         
@@ -43,12 +43,6 @@
                     </div>
                 {% else %}
                     {{ field }}
-                {% endif %}
-                
-                {% if field.errors %}
-                    <div class="form-errors" role="alert">
-                        {{ field.errors }}
-                    </div>
                 {% endif %}
             </div>
             {% endfor %}

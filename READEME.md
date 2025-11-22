@@ -67,6 +67,13 @@ python manage.py runserver
 7. **Accéder à l'application**
 Ouvrez votre navigateur : `http://127.0.0.1:8000/`
 
+8. **Comptes de démonstration**
+```
+Après installation, vous pouvez créer un compte via la page d'inscription 
+ou utiliser le superutilisateur créé à l'étape 5 pour accéder à l'admin Django : 
+`http://127.0.0.1:8000/admin/`
+
+```
 ## Structure du Projet
 ```
 litreview/
@@ -108,34 +115,23 @@ litreview/
 - `followed_user` : Utilisateur suivi
 - Contrainte : `unique_together` pour éviter les doublons
 
-## 🧪 Tests
-```bash
-# Lancer tous les tests
-python manage.py test
-
-# Tests avec couverture
-coverage run --source='.' manage.py test
-coverage report
-```
-
-## 📋 Conformité
+**Note** : Les images uploadées sont stockées dans le dossier `media/`. 
+-Ce dossier est créé automatiquement lors du premier upload.
+##  Conformité
 
 - ✅ **PEP8** : Code conforme aux standards Python
-- ✅ **WCAG 2.1** : Accessibilité niveau AA
-- ✅ **Django Best Practices** : Structure et sécurité
+- ✅ **WCAG** : Accessibilité respectée
 
-## 📄 Licence
+
+##  Licence
 
 Ce projet est développé dans le cadre de la formation OpenClassrooms.
 
-## 👨‍💻 Auteur
+##  Auteur
 
 **Votre Nom**
-- GitHub: [@votre-username](https://github.com/votre-username)
-- Email: votre.email@example.com
+- GitHub: https://github.com/sofianeallouche
+- Email: sofianeallouche@yahoo.com
 
-## 🙏 Remerciements
 
-- OpenClassrooms pour le cahier des charges
-- La communauté Django
 

@@ -3,21 +3,28 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import User, Ticket, Review, UserFollows
 
 
-
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     """Configuration de l'admin pour le modèle User personnalisé"""
     list_display = ('username', 'is_staff', 'date_joined')
     ordering = ('-date_joined',)
-    
+
     # Ces champs sont nécessaires pour UserAdmin
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
-        ('Informations personnelles', {'fields': ('first_name', 'last_name', 'email')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
-        ('Dates importantes', {'fields': ('last_login', 'date_joined')}),
+        ('Informations personnelles',
+         {'fields': ('first_name', 'last_name', 'email')}),
+        ('Permissions', {'fields':
+                         ('is_active',
+                          'is_staff',
+                          'is_superuser',
+                          'groups',
+                          'user_permissions'
+                          )}),
+        ('Dates importantes',
+         {'fields': ('last_login', 'date_joined')}),
     )
-    
+
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
@@ -46,6 +53,7 @@ class ReviewAdmin(admin.ModelAdmin):
     list_display = ('headline', 'user', 'ticket', 'rating', 'time_created')
     date_hierarchy = 'time_created'
     readonly_fields = ('time_created',)
+
 
 @admin.register(UserFollows)
 class UserFollowsAdmin(admin.ModelAdmin):

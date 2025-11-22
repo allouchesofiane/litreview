@@ -15,26 +15,30 @@ class LoginForm(forms.Form):
         required=True,
         label="Nom d'utilisateur"
     )
-    
+
     password = forms.CharField(
         required=True,
         label="Mot de passe"
     )
+
+
 class SignUpForm(UserCreationForm):
     """
-    Formulaire d'inscription utilisateur,Hérite de UserCreationForm pour gérer le mot de pass 1 et le mot de passe 2.
+    Formulaire d'inscription utilisateur,
+    Hérite de UserCreationForm pour gérer le mot de pass 1
+    et le mot de passe 2.
     """
     username = forms.CharField(
         max_length=100,
         required=True,
         label="Nom d'utilisateur"
     )
-    
+
     password1 = forms.CharField(
         required=True,
         label="Mot de passe"
     )
-    
+
     password2 = forms.CharField(
         required=True,
         label="Confirmer mot de passe"
@@ -54,13 +58,13 @@ class TicketForm(forms.ModelForm):
         required=True,
         label="Titre"
     )
-    
+
     description = forms.CharField(
         max_length=2000,
         required=False,
         label="Description"
     )
-    
+
     image = forms.ImageField(
         required=False,
         label="Image"
@@ -76,19 +80,19 @@ class ReviewForm(forms.ModelForm):
     Formulaire pour créer/modifier une critique.
     """
     RATING_CHOICES = [(i, '★' * i) for i in range(6)]
-    
+
     rating = forms.ChoiceField(
         choices=RATING_CHOICES,
         required=True,
         label="Note"
     )
-    
+
     headline = forms.CharField(
         max_length=100,
         required=True,
         label="Titre"
     )
-    
+
     body = forms.CharField(
         max_length=7000,
         required=False,
@@ -99,35 +103,59 @@ class ReviewForm(forms.ModelForm):
         model = Review
         fields = ['rating', 'headline', 'body']
 
+
 class TicketReviewForm(forms.Form):
     """
     Formulaire combiné pour créer un ticket ET une critique en une seule étape.
     """
     # Champs du Ticket
-    ticket_title = forms.CharField(max_length=128, required=True, widget=forms.TextInput(attrs={'class': 'form-input'}),
+    ticket_title = forms.CharField(
+        max_length=128, required=True,
+        widget=forms.TextInput(attrs={'class': 'form-input'}),
         label="Titre du livre/article"
     )
-    
-    ticket_description = forms.CharField(max_length=2048, required=False, widget=forms.Textarea(attrs={'class': 'form-textarea','rows': 3}),
+
+    ticket_description = forms.CharField(
+        max_length=2048, required=False,
+        widget=forms.Textarea(
+            attrs={'class': 'form-textarea', 'rows': 3
+                   }),
         label="Description"
     )
-    
-    ticket_image = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class': 'form-file-input','accept': 'image/*'}),
+
+    ticket_image = forms.ImageField(
+        required=False, widget=forms.FileInput(
+            attrs={
+                'class': 'form-file-input', 'accept': 'image/*'
+                }),
         label="Image"
     )
-    
+
     # Champs de la Review
     RATING_CHOICES = [(i, '★' * i) for i in range(6)]
-    
-    rating = forms.ChoiceField(choices=RATING_CHOICES,required=True, widget=forms.RadioSelect(attrs={'class': 'rating-input'}),
+
+    rating = forms.ChoiceField(
+        choices=RATING_CHOICES, required=True,
+        widget=forms.RadioSelect(attrs={
+            'class': 'rating-input'
+            }),
         label="Note"
     )
-    
-    headline = forms.CharField(max_length=128, required=True, widget=forms.TextInput(attrs={'class': 'form-input'}),
+
+    headline = forms.CharField(
+        max_length=128, required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-input'
+            }),
         label="Titre de la critique"
     )
-    
-    body = forms.CharField(max_length=8192, required=False, widget=forms.Textarea(attrs={'class': 'form-textarea','rows': 8}),
+
+    body = forms.CharField(
+        max_length=8192,
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'form-textarea', 'rows': 8
+            }),
         label="Commentaire"
     )
 
@@ -135,6 +163,7 @@ class TicketReviewForm(forms.Form):
         """Convertit le rating en entier"""
         rating = self.cleaned_data.get('rating')
         return int(rating)
+
 
 class FollowUserForm(forms.Form):
     """
@@ -144,35 +173,40 @@ class FollowUserForm(forms.Form):
     username = forms.CharField(
         max_length=150,
         required=True,
-        widget=forms.TextInput(attrs={'class': 'form-input', 'autofocus': True}),
+        widget=forms.TextInput(attrs={
+            'class': 'form-input', 'autofocus': True}),
         label="Nom d'utilisateur"
     )
 
     def __init__(self, *args, **kwargs):
-        self.current_user = kwargs.pop('current_user', None)
+        self.current_user = kwargs.pop(
+            'current_user', None)
         super().__init__(*args, **kwargs)
 
     def clean_username(self):
         """Valide le nom d'utilisateur à suivre"""
         username = self.cleaned_data.get('username')
-        
+
         # Vérifier que l'utilisateur existe
         try:
             user_to_follow = User.objects.get(username=username)
         except User.DoesNotExist:
-            raise forms.ValidationError(f"L'utilisateur '{username}' n'existe pas.")
-        
+            raise forms.ValidationError(
+                f"L'utilisateur '{username}' n'existe pas.")
+
         # Empêcher de se suivre soi-même
         if self.current_user and user_to_follow == self.current_user:
-            raise forms.ValidationError("Vous ne pouvez pas vous suivre vous-même.")
-        
+            raise forms.ValidationError(
+                "Vous ne pouvez pas vous suivre vous-même.")
+
         # Vérifier si l'abonnement existe déjà
         if self.current_user and UserFollows.objects.filter(
             user=self.current_user,
             followed_user=user_to_follow
         ).exists():
-            raise forms.ValidationError(f"Vous suivez déjà {username}.")
-        
+            raise forms.ValidationError(
+                f"Vous suivez déjà {username}.")
+
         return username
 
 
@@ -180,5 +214,7 @@ class DeleteConfirmForm(forms.Form):
     """
     Formulaire simple pour confirmer la suppression.
     """
-    confirm = forms.BooleanField(required=True, widget=forms.HiddenInput(), initial=True)
-
+    confirm = forms.BooleanField(
+        required=True,
+        widget=forms.HiddenInput(),
+        initial=True)

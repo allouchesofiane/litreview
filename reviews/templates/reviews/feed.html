@@ -2,25 +2,6 @@
 {% block title %}Flux - LITReview{% endblock %}
 {% block content %}
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom mb-4">
-  <div class="container">
-    <div class="navbar-nav d-flex flex-row w-100 justify-content-between align-items-center">
-      <div class="d-flex gap-3">
-        <a class="nav-link active fw-semibold text-primary" href="{% url 'feed' %}">Flux</a>
-        <a class="nav-link text-dark" href="{% url 'posts' %}">Posts</a>
-        <a class="nav-link text-dark" href="">Abonnement</a>
-      </div>
-      <h1 class="text-primary d-dlex justify-content-center ">LITReview</h1>
-      {% if user.is_authenticated %}
-        <form method="post" action="{% url 'logout' %}" class="m-0">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-link text-danger text-decoration-none p-0">Déconnexion</button>
-        </form>
-      {% endif %}
-    </div>
-  </div>
-</nav>
 
 <div class="container">
   <h1 style="text-align: center; margin-bottom: 32px;">
