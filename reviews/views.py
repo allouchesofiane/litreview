@@ -78,7 +78,8 @@ def login_view(request):
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            user = authenticate(request, username=username, password=password)
+            user = authenticate(
+                request, username=username, password=password)
 
             if user is not None:
                 login(request, user)
@@ -348,8 +349,10 @@ def posts_view(request):
     data = []
 
     for ticket in user_tickets:
-        my_review = Review.objects.filter(ticket=ticket, user=request.user).first()
-        other_reviews = Review.objects.filter(ticket=ticket).exclude(user=request.user)
+        my_review = Review.objects.filter(
+            ticket=ticket, user=request.user).first()
+        other_reviews = Review.objects.filter(
+            ticket=ticket).exclude(user=request.user)
 
         data.append({
             'ticket': ticket,

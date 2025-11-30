@@ -4,18 +4,17 @@ Application web Django permettant de demander et publier des critiques de livres
 
 ##  Fonctionnalités
 
-- ✅ Inscription et authentification utilisateurs
-- ✅ Création de tickets (demandes de critiques)
-- ✅ Publication de critiques (en réponse ou autonome)
-- ✅ Flux personnalisé des utilisateurs suivis
-- ✅ Système de suivi d'utilisateurs
-- ✅ CRUD complet sur ses propres posts
+-  Inscription et authentification utilisateurs
+-  Création de tickets (demandes de critiques)
+-  Publication de critiques 
+-  Flux personnalisé des utilisateurs suivis
+-  Système de suivi d'utilisateurs
 
 ##  Technologies
 
 - **Framework** : Django 
 - **Base de données** : SQLite3
-- **Frontend** : HTML, CSS , Bootstrap
+- **Frontend** : HTML, Bootstrap
 - **Python** : 3.13.3
 
 ##  Installation
@@ -99,7 +98,7 @@ litreview/
 - `title` : Titre du ticket
 - `description` : Description
 - `user` : Créateur
-- `image` : Image (optionnelle)
+- `image` : Image
 - `time_created` : Date de création
 
 ### Review
@@ -129,7 +128,7 @@ Ce projet est développé dans le cadre de la formation OpenClassrooms.
 
 ##  Auteur
 
-**Votre Nom**
+  Sofiane ALLOUCHE
 - GitHub: https://github.com/sofianeallouche
 - Email: sofianeallouche@yahoo.com
 

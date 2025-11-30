@@ -66,11 +66,13 @@ class TicketForm(forms.ModelForm):
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
 
+
 class ReviewForm(forms.ModelForm):
     """
     Formulaire pour créer/modifier une critique.
     """
-    RATING_CHOICES = [(i, '★' * i if i > 0 else 'Aucune note') for i in range(6)]
+    RATING_CHOICES = [
+        (i, '★' * i if i > 0 else 'Aucune note') for i in range(6)]
 
     rating = forms.ChoiceField(
         choices=RATING_CHOICES,
@@ -169,7 +171,6 @@ class TicketReviewForm(forms.Form):
         """Convertit le rating en entier"""
         rating = self.cleaned_data.get('rating')
         return int(rating)
-
 
 
 class FollowUserForm(forms.Form):
