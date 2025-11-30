@@ -1,22 +1,37 @@
 {% extends 'reviews/base.html' %}
-
 {% block title %}Vos posts - LITReview{% endblock %}
 
 {% block content %}
-
 <div class="container">
-    <h1 style="text-align: center; margin-bottom: 32px;">
-         Vos posts
-    </h1>
-    
-    {% if posts %}
-        {% for post in posts %}
-            {% if post.content_type == 'TICKET' %}
-                {% include 'reviews/ticket_snippet.html' with ticket=post %}
-            {% elif post.content_type == 'REVIEW' %}
-                {% include 'reviews/review_snippet.html' with review=post %}
+
+    <h1 class="text-center mb-4">Vos posts</h1>
+
+    {% if data %}
+        {% for item in data %}
+
+            <!-- TICKET -->
+            {% include "reviews/ticket_snippet.html" with ticket=item.ticket %}
+
+            <!-- Ma critique (si elle existe) -->
+            {% if item.my_review %}
+                <h4 class="mt-3 text-primary">Votre critique</h4>
+                {% include "reviews/review_snippet.html" with review=item.my_review %}
             {% endif %}
+
+            <!-- Critiques des autres -->
+            {% if item.other_reviews %}
+                <h4 class="mt-3">Critiques reçues</h4>
+                {% for rev in item.other_reviews %}
+                    {% include "reviews/review_snippet.html" with review=rev %}
+                {% endfor %}
+            {% endif %}
+
+            <hr class="my-4">
+
         {% endfor %}
+    {% else %}
+        <p>Aucun post pour le moment.</p>
     {% endif %}
+
 </div>
 {% endblock %}

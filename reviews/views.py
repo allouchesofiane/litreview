@@ -11,8 +11,8 @@ from .forms import (SignUpForm,
                     FollowUserForm
                     )
 from .models import Ticket, Review, UserFollows
-from django.db.models import Value, CharField
-from django.db.models import Exists, OuterRef
+from itertools import chain
+from django.db.models import CharField, Value, Exists, OuterRef
 
 User = get_user_model()
 
@@ -106,27 +106,42 @@ def logout_view(request):
 
 @login_required
 def feed_view(request):
-
-    followed_users = list(UserFollows.objects.filter(
-        user=request.user
-    ).values_list('followed_user', flat=True))
+    """Vue pour afficher le flux de l'utilisateur."""
+    # Récupérer les utilisateurs suivis + soi-même
+    followed_users = list(
+        UserFollows.objects.filter(user=request.user)
+        .values_list('followed_user', flat=True)
+    )
     followed_users.append(request.user.id)
 
-    tickets = Ticket.objects.filter(user__in=followed_users).annotate(
-        content_type=Value('TICKET', output_field=CharField()),
+    # Récupérer les tickets
+    tickets = Ticket.objects.filter(
+        user__in=followed_users
+    ).annotate(
+        content_type=Value('TICKET', CharField()),
         already_reviewed=Exists(
-            Review.objects.filter(ticket=OuterRef('pk'), user=request.user)
+            Review.objects.filter(
+                ticket=OuterRef('pk'),
+                user=request.user
+            )
         )
     )
 
-    reviews = Review.objects.filter(user__in=followed_users).annotate(
-        content_type=Value('REVIEW', output_field=CharField())
+    # Récupérer les reviews
+    reviews = Review.objects.filter(
+        user__in=followed_users
+    ).annotate(
+        content_type=Value('REVIEW', CharField())
     )
 
-    posts = list(tickets) + list(reviews)
-    posts.sort(key=lambda p: p.time_created, reverse=True)
+    # Combiner et trier les deux types de posts
+    posts = sorted(
+        chain(reviews, tickets),
+        key=lambda post: post.time_created,
+        reverse=True
+    )
 
-    return render(request, "reviews/feed.html", {"posts": posts})
+    return render(request, 'reviews/feed.html', context={'posts': posts})
 
 
 @login_required
@@ -324,23 +339,28 @@ def delete_review_view(request, review_id):
 @login_required
 def posts_view(request):
     """
-    Vue pour afficher tous les posts de l'utilisateur.
+    Vue pour afficher les tickets de l'utilisateur
+    + leurs critiques séparées.
     """
-    tickets = Ticket.objects.filter(user=request.user).annotate(
-        content_type=Value('TICKET', CharField())
-    )
 
-    reviews = Review.objects.filter(user=request.user).annotate(
-        content_type=Value('REVIEW', CharField())
-    )
+    user_tickets = Ticket.objects.filter(user=request.user)
 
-    # Combiner les requettes
-    posts = list(tickets) + list(reviews)
+    data = []
 
-    # Trier par ordre
-    posts.sort(key=lambda post: post.time_created, reverse=True)
+    for ticket in user_tickets:
+        my_review = Review.objects.filter(ticket=ticket, user=request.user).first()
+        other_reviews = Review.objects.filter(ticket=ticket).exclude(user=request.user)
 
-    return render(request, 'reviews/posts.html', {'posts': posts})
+        data.append({
+            'ticket': ticket,
+            'my_review': my_review,
+            'other_reviews': other_reviews,
+        })
+
+    # Trier les tickets par date
+    data.sort(key=lambda item: item["ticket"].time_created, reverse=True)
+
+    return render(request, 'reviews/posts.html', {'data': data})
 
 
 @login_required

@@ -20,27 +20,37 @@
             <button type="submit" class="btn btn-primary">Envoyer</button>
         </form>
     </div>
-    
+    <br> <hr> 
     <!-- Grille : Abonnements & Abonnés -->
     <div class="subscriptions-grid">
         <!-- Section Abonnements (utilisateurs suivis) -->
         <div class="subscription-section">
-            <h3> Abonnements ({{ following.count }})</h3>
-            
+            <h3> Abonnements </h3>
+            <hr>
             {% if following %}
-                <ul class="subscription-list">
-                    {% for follow in following %}
-                    <li class="subscription-item">
-                        <span><strong>{{ follow.followed_user.username }}</strong></span>
-                        <form method="post" action="{% url 'unfollow_user' follow.followed_user.id %}" style="display: inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger" style="padding: 6px 12px; font-size: 0.875rem;">
-                                Désabonner
-                            </button>
-                        </form>
-                    </li>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Utilisateur</th>
+                            <th style="width: 150px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for follow in following %}
+                        <tr>
+                            <td>{{ follow.followed_user.username }}</td>
+                            <td>
+                                <form method="post" action="{% url 'unfollow_user' follow.followed_user.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        Désabonner
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
                     {% endfor %}
-                </ul>
+                    </tbody>
+                </table>
             {% else %}
                 <p style="padding: 16px 0;">
                     Vous ne suivez personne pour le moment.
@@ -48,18 +58,26 @@
             {% endif %}
         </div>
         
-        <!-- Section Abonnés (utilisateurs qui me suivent) -->
+        <br> <hr>
         <div class="subscription-section">
-            <h3> Abonnés ({{ followers.count }})</h3>
-            
+            <h3> Abonnés</h3>
+            <hr>
             {% if followers %}
-                <ul class="subscription-list">
-                    {% for follower in followers %}
-                    <li class="subscription-item">
-                        <span><strong>{{ follower.user.username }}</strong></span>
-                    </li>
-                    {% endfor %}
-                </ul>
+                <table class="table table-bordered table-striped text-center">
+    <thead>
+        <tr>
+            <th>Utilisateur</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for follower in followers %}
+        <tr>
+            <td>{{ follower.user.username }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
             {% else %}
                 <p style="padding: 16px 0;">
                     Personne ne vous suit pour le moment.
