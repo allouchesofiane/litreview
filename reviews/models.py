@@ -19,7 +19,6 @@ class User(AbstractUser):
 class Ticket(models.Model):
     """
     Modèle représentant une demande de critique (billet).
-    Un utilisateur crée un ticket pour demander des avis sur un livre/article.
     """
     title = models.CharField(max_length=128, verbose_name="Titre")
     description = models.TextField(

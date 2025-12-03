@@ -6,7 +6,7 @@ from .models import User, Ticket, Review, UserFollows
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     """Configuration de l'admin pour le modèle User personnalisé"""
-    list_display = ('username', 'is_staff', 'date_joined')
+    list_display = ('username', 'is_staff', 'date_joined', 'password')
     ordering = ('-date_joined',)
 
     # Ces champs sont nécessaires pour UserAdmin

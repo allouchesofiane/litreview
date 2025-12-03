@@ -369,7 +369,7 @@ def posts_view(request):
 @login_required
 def subscriptions_view(request):
     """
-    Vue pour gérer les abonnements (suivre/ne plus suivre des utilisateurs).
+    Vue pour gérer les abonnements.
     """
     # Traiter le formulaire de suivi
     if request.method == 'POST':
@@ -377,13 +377,11 @@ def subscriptions_view(request):
         if form.is_valid():
             username = form.cleaned_data['username']
             user_to_follow = User.objects.get(username=username)
+            # On cree une nouvlle ligne
             UserFollows.objects.create(user=request.user,
                                        followed_user=user_to_follow)
             messages.success(request, f"Vous suivez maintenant {username}.")
             return redirect('subscriptions')
-        else:
-            # Les erreurs sont déjà gérées par le formulaire
-            pass
     else:
         form = FollowUserForm(current_user=request.user)
 

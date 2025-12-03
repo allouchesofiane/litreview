@@ -106,8 +106,7 @@ class TicketReviewForm(forms.Form):
         max_length=128,
         required=True,
         widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Titre du livre ou de l’article'
+            'class': 'form-control'
         }),
         label="Titre du livre/article"
     )
@@ -117,8 +116,7 @@ class TicketReviewForm(forms.Form):
         required=False,
         widget=forms.Textarea(attrs={
             'class': 'form-control',
-            'rows': 3,
-            'placeholder': 'Décrivez brièvement le contenu…'
+            'rows': 3
         }),
         label="Description"
     )
@@ -150,8 +148,7 @@ class TicketReviewForm(forms.Form):
         max_length=128,
         required=True,
         widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Titre de votre critique'
+            'class': 'form-control'
         }),
         label="Titre de la critique"
     )
@@ -161,22 +158,16 @@ class TicketReviewForm(forms.Form):
         required=False,
         widget=forms.Textarea(attrs={
             'class': 'form-control',
-            'rows': 8,
-            'placeholder': 'Votre avis sur le livre / article…'
+            'rows': 8
         }),
         label="Commentaire"
     )
-
-    def clean_rating(self):
-        """Convertit le rating en entier"""
-        rating = self.cleaned_data.get('rating')
-        return int(rating)
 
 
 class FollowUserForm(forms.Form):
     """
     Formulaire pour suivre un utilisateur.
-    L'utilisateur entre le nom d'utilisateur à suivre.
+
     """
     username = forms.CharField(
         max_length=150,
@@ -201,11 +192,6 @@ class FollowUserForm(forms.Form):
         except User.DoesNotExist:
             raise forms.ValidationError(
                 f"L'utilisateur '{username}' n'existe pas.")
-
-        # Empêcher de se suivre soi-même
-        if self.current_user and user_to_follow == self.current_user:
-            raise forms.ValidationError(
-                "Vous ne pouvez pas vous suivre vous-même.")
 
         # Vérifier si l'abonnement existe déjà
         if self.current_user and UserFollows.objects.filter(
