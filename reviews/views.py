@@ -10,6 +10,7 @@ from .forms import (SignUpForm,
                     TicketReviewForm,
                     FollowUserForm
                     )
+from django.http import HttpResponseForbidden
 from .models import Ticket, Review, UserFollows
 from itertools import chain
 from django.db.models import CharField, Value, Exists, OuterRef
@@ -22,25 +23,10 @@ def home_view(request):
     """
     Page d'accueil pour les utilisateurs non connectés.
     """
-    if request.method == "POST":
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(request,
-                                username=username,
-                                password=password
-                                )
-            if user is not None:
-                login(request, user)
-                return redirect('feed')
-            else:
-                messages.error(request,
-                               "Nom d'utilisateur ou mot de passe incorrect."
-                               )
-    else:
-        form = LoginForm()
+    if request.user.is_authenticated:
+        return redirect('feed')
 
+    form = LoginForm()
     return render(request, 'reviews/home.html', {'form': form})
 
 
@@ -91,7 +77,7 @@ def login_view(request):
     else:
         form = LoginForm()
 
-    return render(request, 'reviews/login.html', {'form': form})
+    return render(request, 'reviews/home.html', {'form': form})
 
 
 # Vue pour la deconnexion
@@ -206,10 +192,11 @@ def edit_ticket_view(request, ticket_id):
     """
     Vue pour modifier un ticket existant.
     """
-    ticket = get_object_or_404(Ticket,
-                               id=ticket_id,
-                               user=request.user
-                               )
+    ticket = get_object_or_404(Ticket, id=ticket_id)
+
+    if ticket.user != request.user:
+        return HttpResponseForbidden(
+            "Vous n'avez pas la permission de modifier ce ticket.")
 
     if request.method == 'POST':
         form = TicketForm(request.POST,
@@ -240,7 +227,11 @@ def delete_ticket_view(request, ticket_id):
     """
     Vue pour supprimer un ticket (seulement l'auteur).
     """
-    ticket = get_object_or_404(Ticket, id=ticket_id, user=request.user)
+    ticket = get_object_or_404(Ticket, id=ticket_id)
+
+    if ticket.user != request.user:
+        return HttpResponseForbidden(
+            "Vous n'avez pas la permission de supprimer ce ticket.")
 
     if request.method == 'POST':
         ticket.delete()
@@ -297,8 +288,11 @@ def edit_review_view(request, review_id):
     """
     Vue pour modifier une review existante (seulement l'auteur).
     """
-    review = get_object_or_404(Review,
-                               id=review_id, user=request.user)
+    review = get_object_or_404(Review, id=review_id)
+
+    if review.user != request.user:
+        return HttpResponseForbidden(
+            "Vous n'avez pas la permission de modifier cette critique.")
 
     if request.method == 'POST':
         form = ReviewForm(request.POST, instance=review)
@@ -323,8 +317,11 @@ def delete_review_view(request, review_id):
     """
     Vue pour supprimer une review (seulement l'auteur).
     """
-    review = get_object_or_404(Review,
-                               id=review_id, user=request.user)
+    review = get_object_or_404(Review, id=review_id)
+
+    if review.user != request.user:
+        return HttpResponseForbidden(
+            "Vous n'avez pas la permission de supprimer ce ticket.")
 
     if request.method == 'POST':
         review.delete()

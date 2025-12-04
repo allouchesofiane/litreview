@@ -22,7 +22,7 @@
             <div class="card border-0 h-100">
                 <div class="card-body">
                     <h2 class="h4 text-center mb-3">Connectez-vous</h2>
-                    <form method="post" action="{% url 'home' %}">
+                    <form method="post" action="{% url 'login' %}">
                         {% csrf_token %}
                         <div class="mb-3">
                             <label class="form-label mb-0">{{ form.username.label }}</label>

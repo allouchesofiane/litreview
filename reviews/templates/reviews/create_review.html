@@ -19,7 +19,7 @@
             <p style="margin-top: 8px;">{{ ticket.description }}</p>
             {% endif %}
             {% if ticket.image %}
-            <img src="{{ ticket.image.url }}" alt="Image du livre" style="width: 200px; margin-top: 12px; border-radius: 4px;">
+            <img src="{{ ticket.image.url }}" alt="Image associée au ticket : {{ ticket.title }}" style="width: 200px; margin-top: 12px; border-radius: 4px;">
             {% endif %}
         </div>
         
